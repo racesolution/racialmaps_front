@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { parsearFecha } from '../hooks/useMultifiltros';
+import { parsearFecha } from '../hooks/useMultiFiltros';
 
 export default function ST_tabla({ datosFiltrados, columnasVisibles }) {
   
