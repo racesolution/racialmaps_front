@@ -5,7 +5,7 @@ import { useMultifiltros } from '../hooks/useMultiFiltros';
 import ST_tabla from './ST_tabla';      
 import ST_grafico from './ST_grafico'; 
 import Dropdown from './dropdown';      
-import SelectorFechaLocal from './SelectorFechaLocal'; 
+import SelectorFechaLocal from './selectorFechaLocal'; 
 
 export default function ST() {
   const [datos, setDatos] = useState([]);
