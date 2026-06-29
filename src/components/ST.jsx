@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { pranaBD } from '../services/pranaBD';
-import { useMultifiltros } from '../hooks/useMultifiltros'; 
+import { useMultifiltros } from '../hooks/useMultiFiltros'; 
 import ST_tabla from './ST_tabla';      
 import ST_grafico from './ST_grafico'; 
 import Dropdown from './dropdown';      
