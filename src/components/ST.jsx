@@ -94,8 +94,6 @@ export default function ST() {
 
   const totalBalance = kpis.ingresos + kpis.egresos;
 
-  console.log("Datos que recibe el gráfico:", dataGrafico);
-
   return (
     // Redujimos el padding general (p-4 sm:p-6) y quitamos el min-h-screen
     <div className="bg-transparent p-4 sm:p-6">
