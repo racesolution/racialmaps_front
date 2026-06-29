@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react'; 
 import { Link } from 'react-router-dom';
 import { pranaBD } from '../services/pranaBD';
 import { useMultifiltros } from '../hooks/useMultiFiltros'; 
@@ -17,7 +17,6 @@ export default function ST() {
   const {
     filtros,
     datosFiltrados,
-    dataGrafico: dataGraficoObsoleta,
     opcionesFechaAbsolutas,
     opcionesPartidaCruzadas,
     opcionesSubPartidaCruzadas,
@@ -26,7 +25,8 @@ export default function ST() {
     limpiarFiltros
   } = useMultifiltros(datos);
 
-  const dataGrafico = React.useMemo(() => {
+  // Generación local y limpia de los datos estructurados para el componente Recharts
+  const dataGrafico = useMemo(() => {
     if (!datosFiltrados.length) return [];
 
     const fechasUnicas = [...new Set(datosFiltrados.map(f => f.Fecha))];
@@ -80,7 +80,7 @@ export default function ST() {
 
   const columnasVisibles = ['Fecha', 'Descripción operación', 'Monto', 'Saldo', 'Partida', 'subPartida', 'Link'];
 
-  const kpis = React.useMemo(() => {
+  const kpis = useMemo(() => {
     return datosFiltrados.reduce(
       (acc, fila) => {
         const monto = typeof fila.Monto === 'number' ? fila.Monto : 0;
@@ -95,7 +95,6 @@ export default function ST() {
   const totalBalance = kpis.ingresos + kpis.egresos;
 
   return (
-    // Redujimos el padding general (p-4 sm:p-6) y quitamos el min-h-screen
     <div className="bg-transparent p-4 sm:p-6">
       <div className="max-w-7xl mx-auto">
         
@@ -149,7 +148,6 @@ export default function ST() {
           <div className="flex flex-col lg:flex-row items-stretch lg:items-end gap-3 mb-6 bg-white p-3.5 rounded-xl border border-gray-200 shadow-sm">
             
             <div className="grid grid-cols-1 md:grid-cols-4 gap-3 flex-grow">
-              
               <SelectorFechaLocal 
                 titulo="Rango de Fechas" 
                 opciones={opcionesFechaAbsolutas} 

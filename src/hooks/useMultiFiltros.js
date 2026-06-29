@@ -36,62 +36,55 @@ export function useMultifiltros(datosIniciales) {
     }
   }, [opcionesFechaAbsolutas]);
 
-  // --- EFECTO CLAVE: Sincronizar Calendario en base a PERIODO ---
-  // --- EFECTO REFACTORIZADO Y HOMOLOGADO: Sincronizar Calendario descomponiendo el PERIODO ---
-useEffect(() => {
-  if (filtros.PERIODO.length > 0) {
-    // Tomamos el primer periodo seleccionado (por ejemplo: "2026_05")
-    const periodoSeleccionado = String(filtros.PERIODO[0]).trim();
-    
-    // Verificamos si cumple con el patrón de separación por guión bajo "AAAA_MM"
-    if (periodoSeleccionado.includes('_')) {
-      const partes = periodoSeleccionado.split('_');
-      const anio = parseInt(partes[0], 10);
-      const mes = parseInt(partes[1], 10); // Ejemplo: 5 para Mayo
+  // --- EFECTO: Sincronizar Calendario en base a PERIODO ---
+  useEffect(() => {
+    if (filtros.PERIODO.length > 0) {
+      const periodoSeleccionado = String(filtros.PERIODO[0]).trim();
+      
+      if (periodoSeleccionado.includes('_')) {
+        const partes = periodoSeleccionado.split('_');
+        const anio = parseInt(partes[0], 10);
+        const mes = parseInt(partes[1], 10);
 
-      if (!isNaN(anio) && !isNaN(mes)) {
-        // El primer día del mes es siempre 1
-        const primeraFechaStr = `1/${mes}/${anio}`;
-        
-        // Para calcular el último día, usamos el truco de pedir el día '0' del mes siguiente
-        const ultimoDiaDate = new Date(anio, mes, 0);
-        const ultimaFechaStr = `${ultimoDiaDate.getDate()}/${mes}/${anio}`;
+        if (!isNaN(anio) && !isNaN(mes)) {
+          const primeraFechaStr = `1/${mes}/${anio}`;
+          const ultimoDiaDate = new Date(anio, mes, 0);
+          const ultimaFechaStr = `${ultimoDiaDate.getDate()}/${mes}/${anio}`;
+
+          setFiltros(prev => ({
+            ...prev,
+            Fecha: { desde: primeraFechaStr, hasta: ultimaFechaStr }
+          }));
+          return;
+        }
+      }
+
+      // FALLBACK LOGICAL
+      const filasDelPeriodo = datosCronologicos.filter(fila => 
+        filtros.PERIODO.includes(String(fila.PERIODO || '').trim())
+      );
+
+      if (filasDelPeriodo.length > 0) {
+        const primeraFecha = filasDelPeriodo[0].Fecha;
+        const ultimaFecha = filasDelPeriodo[filasDelPeriodo.length - 1].Fecha;
 
         setFiltros(prev => ({
           ...prev,
-          Fecha: { desde: primeraFechaStr, hasta: ultimaFechaStr }
+          Fecha: { desde: primeraFecha, hasta: ultimaFecha }
         }));
-        return; // Salimos del efecto porque ya lo resolvimos matemáticamente
+      }
+    } else {
+      if (opcionesFechaAbsolutas.length > 0) {
+        setFiltros(prev => ({
+          ...prev,
+          Fecha: { 
+            desde: opcionesFechaAbsolutas[0], 
+            hasta: opcionesFechaAbsolutas[opcionesFechaAbsolutas.length - 1] 
+          }
+        }));
       }
     }
-
-    // --- FALLBACK LOGICAL (Por si tus periodos tienen otra estructura en la BD) ---
-    const filasDelPeriodo = datosCronologicos.filter(fila => 
-      filtros.PERIODO.includes(String(fila.PERIODO || '').trim())
-    );
-
-    if (filasDelPeriodo.length > 0) {
-      const primeraFecha = filasDelPeriodo[0].Fecha;
-      const ultimaFecha = filasDelPeriodo[filasDelPeriodo.length - 1].Fecha;
-
-      setFiltros(prev => ({
-        ...prev,
-        Fecha: { desde: primeraFecha, hasta: ultimaFecha }
-      }));
-    }
-  } else {
-    // Si el usuario quita el filtro de PERIODO, restauramos el rango total histórico
-    if (opcionesFechaAbsolutas.length > 0) {
-      setFiltros(prev => ({
-        ...prev,
-        Fecha: { 
-          desde: opcionesFechaAbsolutas[0], 
-          hasta: opcionesFechaAbsolutas[opcionesFechaAbsolutas.length - 1] 
-        }
-      }));
-    }
-  }
-}, [filtros.PERIODO, datosCronologicos, opcionesFechaAbsolutas]);
+  }, [filtros.PERIODO, datosCronologicos, opcionesFechaAbsolutas]);
 
   const handleFiltroChange = (columna, nuevosValores) => {
     setFiltros(prev => ({ ...prev, [columna]: nuevosValores }));
@@ -159,13 +152,9 @@ useEffect(() => {
     });
   }, [datosCronologicos, filtros, opcionesFechaAbsolutas]);
 
-
-
- 
   return {
     filtros,
     datosFiltrados,
-    dataGrafico,
     opcionesFechaAbsolutas,
     opcionesPartidaCruzadas,
     opcionesSubPartidaCruzadas,

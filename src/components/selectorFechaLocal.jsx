@@ -19,7 +19,10 @@ export default function SelectorFechaLocal({ titulo, opciones, filtrosFecha, onF
     // Formateador interno para devolver la fecha a string "D/M/YYYY" compatible con tu BD
     const formatearAStr = (dateObj) => {
       if (!dateObj) return '';
-      return `${dateObj.getDate()}/${dateObj.getMonth() + 1}/${dateObj.getFullYear()}`;
+      const d = String(dateObj.getDate()).padStart(2, '0');
+      const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const y = dateObj.getFullYear();
+      return `${d}/${m}/${y}`; // Asegura formato 01/05/2026
     };
 
     onFiltroChange({

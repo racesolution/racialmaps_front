@@ -3,18 +3,14 @@ import { parsearFecha } from '../hooks/useMultiFiltros';
 
 export default function ST_tabla({ datosFiltrados, columnasVisibles }) {
   
-  // Ordenamiento doble: Fecha (más reciente arriba) + Orden original del dataset (estabilidad)
   const datosOrdenados = useMemo(() => {
     return [...datosFiltrados].sort((a, b) => {
       const fechaA = parsearFecha(a.Fecha).getTime();
       const fechaB = parsearFecha(b.Fecha).getTime();
 
-      // Ordenar por fecha descendente (recientes arriba)
       if (fechaB !== fechaA) {
         return fechaB - fechaA;
       }
-      
-      // Si la fecha es igual, devuelve 0 para mantener el orden relativo original
       return 0;
     });
   }, [datosFiltrados]);
@@ -44,7 +40,6 @@ export default function ST_tabla({ datosFiltrados, columnasVisibles }) {
                     const valor = fila[col];
                     const esNumero = typeof valor === 'number';
 
-                    // Lógica de colores para Monto
                     let clasesMonto = "";
                     if (col === 'Monto' && esNumero) {
                       clasesMonto = valor < 0 
@@ -52,7 +47,6 @@ export default function ST_tabla({ datosFiltrados, columnasVisibles }) {
                         : "text-emerald-700 font-bold";
                     }
 
-                    // Lógica para columna Link
                     if (col === 'Link') {
                       if (!valor) return <td key={idxCol} className="px-6 py-3 whitespace-nowrap"></td>;
                       const linksArray = String(valor).split(',').map(l => l.trim()).filter(Boolean);

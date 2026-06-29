@@ -1,16 +1,15 @@
 import React from 'react';
 import { ResponsiveContainer, ComposedChart, Line, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
-// Añadimos 'referenciaTabla' como prop para poder controlar el scroll hacia la vista de Tabla
 export default function ST_grafico({ dataGrafico, onClickBarra, referenciaTabla }) {
   
-const handleChartClick = (state) => {
-  // Verificamos que exista la etiqueta (la fecha) y la función de callback
-  if (state && state.activeLabel && onClickBarra) {
-    // Ya no hace falta el alert, simplemente disparamos el filtro al padre
-    onClickBarra(state.activeLabel);
-  }
-};
+  // Modificamos el manejador para recibir directamente los datos de la barra clickeada
+  const handleBarClick = (data) => {
+    // data.Fecha contiene el string exacto de la barra (ej: "15/05/2026")
+    if (data && data.Fecha && onClickBarra) {
+      onClickBarra(data.Fecha);
+    }
+  };
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
@@ -25,40 +24,19 @@ const handleChartClick = (state) => {
             key={JSON.stringify(dataGrafico)}
             data={dataGrafico} 
             margin={{ top: 15, right: 20, left: -10, bottom: 5 }}
-            onClick={handleChartClick} // Conectado al nuevo manejador con timer
+            // Quitamos el onClick global de aquí para evitar falsos clics en el fondo
           >
-            {/* DEFINICIÓN DE LAS FLECHAS EN SVG */}
             <defs>
-              {/* Flecha para el extremo derecho */}
-              <marker 
-                id="flecha-derecha" 
-                viewBox="0 0 10 10" 
-                refX="10" 
-                refY="5" 
-                markerWidth="6" 
-                markerHeight="6" 
-                orient="auto-start-reverse"
-              >
+              <marker id="flecha-derecha" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                 <path d="M 0 1 L 10 5 L 0 9 z" fill="#9ca3af" />
               </marker>
-              
-              {/* Flecha para el extremo izquierdo */}
-              <marker 
-                id="flecha-izquierda" 
-                viewBox="0 0 10 10" 
-                refX="0" 
-                refY="5" 
-                markerWidth="6" 
-                markerHeight="6" 
-                orient="auto-start-reverse"
-              >
+              <marker id="flecha-izquierda" viewBox="0 0 10 10" refX="0" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                 <path d="M 10 1 L 0 5 L 10 9 z" fill="#9ca3af" />
               </marker>
             </defs>
 
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
             
-            {/* EJE HORIZONTAL (X): Conectado a los marcadores de flecha */}
             <XAxis 
               dataKey="Fecha" 
               stroke="#374151" 
@@ -74,64 +52,18 @@ const handleChartClick = (state) => {
               type="category" 
             />
             
-            {/* EJE IZQUIERDO: Flujo/Movimientos diarios */}
-            <YAxis 
-              yAxisId="left" 
-              stroke="#4b5563" 
-              fontSize={11} 
-              tick={{ fill: '#1f2937', fontWeight: '700' }}
-              tickLine={false}
-              axisLine={false}
-            />
-
-            {/* EJE DERECHO: Saldo Acumulado */}
-            <YAxis 
-              yAxisId="right" 
-              orientation="right" 
-              stroke="#7957b9" 
-              fontSize={11} 
-              tick={{ fill: '#7957b9', fontWeight: '800' }}
-              tickLine={false} 
-              axisLine={false}
-            />
+            <YAxis yAxisId="left" stroke="#4b5563" fontSize={11} tick={{ fill: '#1f2937', fontWeight: '700' }} tickLine={false} axisLine={false} />
+            <YAxis yAxisId="right" orientation="right" stroke="#7957b9" fontSize={11} tick={{ fill: '#7957b9', fontWeight: '800' }} tickLine={false} axisLine={false} />
             
             <Tooltip 
               formatter={(value, name) => {
                 if (value === undefined || value === null) return ['', ''];
-                
-                const valorFormateado = Number(value).toLocaleString('en-US', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
-                });
-
-                if (name === "Flujo Diario") {
-                  return [valorFormateado, "Flujo"];
-                }
-                if (name === "Saldo en Cuenta") {
-                  return [valorFormateado, "Saldo"];
-                }
-
-                return [valorFormateado, name];
+                const valorFormateado = Number(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                return name === "Flujo Diario" ? [valorFormateado, "Flujo"] : [valorFormateado, "Saldo"];
               }}
-              contentStyle={{ 
-                backgroundColor: '#ffffff', 
-                borderRadius: '12px', 
-                border: '2px solid #1f2937', 
-                padding: '12px',
-                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'
-              }}
-              itemStyle={{ 
-                color: '#111827', 
-                fontWeight: '700', 
-                fontSize: '13px' 
-              }}
-              labelStyle={{ 
-                color: '#374151', 
-                fontWeight: '800', 
-                marginBottom: '6px',
-                fontSize: '12px',
-                textAlign: 'center'
-              }} 
+              contentStyle={{ backgroundColor: '#ffffff', borderRadius: '12px', border: '2px solid #1f2937', padding: '12px', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }}
+              itemStyle={{ color: '#111827', fontWeight: '700', fontSize: '13px' }}
+              labelStyle={{ color: '#374151', fontWeight: '800', marginBottom: '6px', fontSize: '12px', textAlign: 'center' }} 
             />
 
             <Legend 
@@ -139,13 +71,11 @@ const handleChartClick = (state) => {
               iconSize={0}        
               iconType="none"     
               formatter={(value) => (
-                <span className="text-gray-700 font-medium" style={{ marginLeft: '6px' }}>
-                  🟣 {value}
-                </span>
+                <span className="text-gray-700 font-medium" style={{ marginLeft: '6px' }}>🟣 {value}</span>
               )}
             />
             
-            {/* Barras de movimientos */}
+            {/* MOVIMOS EL onClick AQUÍ: Ahora escucha el evento directamente sobre la barra */}
             <Bar 
               yAxisId="left" 
               name="Flujo Diario" 
@@ -154,6 +84,7 @@ const handleChartClick = (state) => {
               maxBarSize={33}
               className="cursor-pointer"
               legendType="none"
+              onClick={handleBarClick} // <--- Vinculación directa y precisa
             >
               {dataGrafico.map((entrada, index) => {
                 const colorBarra = entrada.Movimientos < 0 ? '#f43f5e' : '#10b981';
@@ -161,16 +92,7 @@ const handleChartClick = (state) => {
               })}
             </Bar>
             
-            {/* Línea principal de Balance de cuenta */}
-            <Line 
-              yAxisId="right" 
-              name="Saldo en Cuenta" 
-              type="stepAfter"
-              dataKey="Balance"  // <-- ESTO TIENE QUE SER EXACTAMENTE IGUAL AL NOMBRE DEL CAMPO EN TU JSON
-              stroke="#7957b9" 
-              strokeWidth={3}
-              dot={{ r: 3, stroke: '#7957b9', fill: '#7957b9', strokeWidth: 1 }} 
-            />
+            <Line yAxisId="right" name="Saldo en Cuenta" type="stepAfter" dataKey="Balance" stroke="#7957b9" strokeWidth={3} dot={{ r: 3, stroke: '#7957b9', fill: '#7957b9', strokeWidth: 1 }} />
           </ComposedChart>
         </ResponsiveContainer>
       </div>
