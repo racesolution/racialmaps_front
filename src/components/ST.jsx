@@ -66,17 +66,6 @@ export default function ST() {
       });
   }, []);
 
-  useEffect(() => {
-    if (vista === 'tabla' && tablaRef.current) {
-      const timer = setTimeout(() => {
-        tablaRef.current.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'start' 
-        });
-      }, 150); 
-      return () => clearTimeout(timer);
-    }
-  }, [vista, filtros.Fecha]);
 
   const columnasVisibles = ['Fecha', 'Descripción operación', 'Monto', 'Saldo', 'Partida', 'subPartida', 'Link'];
 
