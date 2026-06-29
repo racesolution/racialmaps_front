@@ -1,7 +1,7 @@
 import React from 'react';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-import { parsearFecha } from '../hooks/useMultifiltros';
+import { parsearFecha } from '../hooks/useMultiFiltros';
 
 export default function SelectorFechaLocal({ titulo, opciones, filtrosFecha, onFiltroChange }) {
   if (!opciones || opciones.length === 0) return null;
