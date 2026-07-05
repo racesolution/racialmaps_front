@@ -1,0 +1,126 @@
+/* Cabecera de la tabla de datos */
+.modal-tabla-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+  font-weight: 600;
+  margin-bottom: 8px;
+  padding: 0 4px;
+}
+
+/* Contenedor de la lista de razas */
+.modal-razas-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+/* Cada fila de raza */
+.modal-raza-row {
+  background-color: #020617;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Indicador circular de color + texto */
+.raza-identificador {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.raza-indicador-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.1);
+}
+
+.raza-nombre-texto {
+  font-size: 14px;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+/* Bloque numérico derecho */
+.raza-valores {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.valor-absoluto {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.valor-relativo {
+  font-size: 14px;
+  font-weight: 800;
+  min-width: 50px;
+  text-align: right;
+}
+
+/* 1. Fondo que cubre el 100% de la ventana del navegador */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(2, 6, 23, 0.8); /* Fondo oscuro traslúcido */
+  backdrop-filter: blur(4px); /* Desenfoque de fondo */
+  display: flex;
+  justify-content: center; /* Centrado horizontal */
+  align-items: center;     /* Centrado vertical */
+  z-index: 99999; /* Un número altísimo para que pase por encima de TODO */
+}
+
+/* 2. Tarjeta del Centro */
+.modal-centro-card {
+  background-color: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 450px;
+  padding: 28px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  /* Eliminamos márgenes o posiciones relativas que puedan tironear el diseño hacia abajo */
+  margin: 0; 
+  position: relative; 
+}
+
+/* src/components/Mapa.css */
+
+/* Centra todo el contenedor de la cabecera */
+/* src/components/Mapa.css */
+
+.modal-header-section {
+  text-align: center;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: #818cf8; /* Usamos el color destacado para que impacte visualmente */
+  text-align: center;
+  letter-spacing: 1.5px;
+  text-transform: uppercase; /* 👈 Esto fuerza el texto a MAYÚSCULAS automáticamente */
+  width: 100%;
+}

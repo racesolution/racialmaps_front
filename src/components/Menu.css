@@ -1,0 +1,47 @@
+/* src/components/Menu.css */
+
+.main-menu {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  height: 45px;
+  background-color: #020617;
+  border-bottom: 1px solid #1e293b;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  z-index: 1010;
+}
+
+.menu-list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 8px;
+}
+
+.menu-item {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 6px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.menu-item:hover {
+  color: #f8fafc;
+  background-color: #0f172a;
+}
+
+.menu-item.active {
+  color: #818cf8;
+  background-color: rgba(129, 140, 248, 0.1);
+  border: 1px solid rgba(129, 140, 248, 0.2);
+}
